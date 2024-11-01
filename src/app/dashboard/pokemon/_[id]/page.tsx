@@ -7,13 +7,20 @@ interface Props {
   params: { id: string };
 }
 
+export async function generateStaticParams() {
+  const static151Pokemons = Array.from({ length: 151 }).map((_, i) => ({
+    id: `${i + 1}`,
+  }));
+
+  return [...static151Pokemons];
+}
+
 const getPokemon = async (id: string): Promise<Pokemon> => {
   try {
     const pokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, {
-      // cache: "force-cache", // TODO: cambiar esto en un futuro
-      // next: {
-      //   revalidate: 60 * 60 * 24,
-      // }
+      next: {
+        revalidate: 60 * 60 * 30 * 6,
+      },
     }).then((res) => res.json());
 
     console.log("Se cargo: ", pokemon.name);
